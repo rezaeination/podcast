@@ -19,8 +19,8 @@ app.get('/download', async (req, res) => {
       args: ['--no-sandbox', '--disable-setuid-sandbox', "single-process", "--no-zygote"],
       executablePath:
       process.env.NODE_ENV === "production"
-      ? "/usr/bin/google-chrome-stable"
-      :puppeteer.Puppeteer.executablepath(),
+      ? process.env.PUPPETEER_EXECUTABLE_PATH
+      :puppeteer.executablePath(),
     });
 
     // Open a new page
