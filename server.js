@@ -27,7 +27,7 @@ app.get('/download', async (req, res) => {
     const page = await browser.newPage();
   
     // Navigate to the URL you want
-    const url = 'https://podcasts.apple.com/us/podcast/the-impact-brand-doctor/id1668394191?i=1000609781274'; // Replace with the URL you want to load
+    const url = podcastUrl; // Replace with the URL you want to load
     await page.goto(url);
   
     // Wait for the button to become visible and click it
