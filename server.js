@@ -7,8 +7,8 @@ const { spawn } = require('child_process');
 const https = require('https');
 const axios = require("axios");
 const ffmpeg = require('fluent-ffmpeg');
-ffmpeg.setFfprobePath('./opt/render/project/src/ffmpeg/bin/ffprobe.exe');
-ffmpeg.setFfmpegPath('./opt/render/project/src/ffmpeg/bin/ffmpeg.exe');
+ffmpeg.setFfprobePath('ffprobe.exe');
+ffmpeg.setFfmpegPath('ffmpeg.exe');
 var readline = require('readline');
 const path = require('path');
 
