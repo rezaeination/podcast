@@ -7,9 +7,13 @@ const { spawn } = require('child_process');
 const https = require('https');
 const axios = require("axios");
 const ffmpeg = require('fluent-ffmpeg');
-ffmpeg.setFfprobePath('./ffmpeg/bin/ffprobe.exe');
-ffmpeg.setFfmpegPath('./ffmpeg/bin/ffmpeg.exe');
+const filePath = path.join(__dirname, 'ffmpeg', 'bin', 'ffmpeg.exe');
+const filePath1 = path.join(__dirname, 'ffmpeg', 'bin', 'ffprobe.exe');
+const filePath2 = path.join(__dirname, 'ffmpeg', 'bin', 'ffplay.exe');
+ffmpeg.setFfprobePath(filePath1);
+ffmpeg.setFfmpegPath(filePath);
 var readline = require('readline');
+const path = require('path');
 
 
 
@@ -141,7 +145,7 @@ console.log(audioSource)
         
             console.error("Error:", error);
           });
-          console.log(audioSource);
+          //console.log(audioSource);
           fs.unlinkSync(outputFileName); // Cleanup temporary file
         })
         .run();
