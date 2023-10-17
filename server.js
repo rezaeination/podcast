@@ -81,9 +81,9 @@ console.log(audioSource)
         response.on('data', (chunk) => {
           downloadedBytes += chunk.length;
           const percent = (downloadedBytes / totalBytes) * 100;
-          global.process.stdout.clearLine();
-          global.process.stdout.cursorTo(0);
-          global.process.stdout.write(`Downloading... ${percent.toFixed(2)}%`);
+          readline.clearLine(process.stdout);
+          readline.cursorTo(process.stdout, 0);
+          process.stdout.write(`Downloading... ${percent.toFixed(2)}%`);
           file.write(chunk);
         });
     
