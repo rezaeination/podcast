@@ -17,6 +17,8 @@ ffmpeg.setFfprobePath(ffmprobe_static.path);
 console.log(ffmprobe_static.path);
 console.log(ffmpeg_static);
 var readline = require('readline');
+const url = require('url');
+
 
 
 
@@ -74,8 +76,9 @@ console.log(audioSource)
     
     // Close the browser
     await browser.close();
-
-    const outputFileName = 'output.mp3';
+    const parsedUrl = new URL(audioSource);
+    let r = (Math.random() + 1).toString(36).substring(7);
+    const outputFileName = `${r}.mp3`;
 
     const downloadAudioFile = (url, dest, callback) => {
       console.log("Started download");
@@ -129,9 +132,9 @@ console.log(audioSource)
         .input(outputFileName)
         .setStartTime(startTime)
         .setDuration(duration)
-        .output('output1.mp3')
+        .output(`${r}1.mp3`)
         .on('end', () => {
-          const audioSource = fs.readFileSync('output1.mp3', { encoding: 'base64' });
+          const audioSource = fs.readFileSync(`${r}1.mp3`, { encoding: 'base64' });
           const payload = {
             name: "output.mp3",
             contents: audioSource,
@@ -152,7 +155,8 @@ console.log(audioSource)
           });
           
           //console.log(audioSource);
-          fs.unlinkSync(outputFileName); // Cleanup temporary file
+          fs.unlinkSync(`${r}1.mp3`); // Cleanup temporary file
+          fs.unlinkSync(`${r}.mp3`);
         })
         .run();
     };
