@@ -6,12 +6,16 @@ const fs = require('fs');
 const { spawn } = require('child_process');
 const https = require('https');
 const axios = require("axios");
-const ffmpeg = require('fluent-ffmpeg');
 const path = require('path');
-const filePathffmpeg = require('ffmpeg-static');
-const filePathffprobe = require('ffprobe-static');
-ffmpeg.setFfprobePath(filePathffprobe);
-ffmpeg.setFfmpegPath(filePathffmpeg);
+const ffmpeg_static = require('ffmpeg-static');
+const ffmprobe_static = require('ffprobe-static');
+const ffmpeg = require('fluent-ffmpeg');
+const ffmpegsrc = require('ffmpeg');
+ffmpegsrc.bin = ffmpeg_static.path
+ffmpeg.setFfmpegPath(ffmpeg_static);
+ffmpeg.setFfprobePath(ffmprobe_static.path);
+console.log(ffmprobe_static.path);
+console.log(ffmpeg_static);
 var readline = require('readline');
 
 

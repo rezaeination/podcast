@@ -12,3 +12,7 @@ RUN npm ci
 COPY . .
 
 CMD ["node","server.js"]
+
+
+RUN apt update
+RUN apt install ffmpeg
