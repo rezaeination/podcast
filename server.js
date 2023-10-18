@@ -14,7 +14,7 @@ const path = require('path');
 
 
 
-
+console.log("Current directory:", __dirname);
 const app = express();
 const port = 3000; // You can choose any port you like
 app.use(cors());
