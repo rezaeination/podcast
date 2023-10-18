@@ -44,7 +44,7 @@ app.get('/download', async (req, res) => {
 
     // Open a new page
 
-    const home = "https://instantsop.com/"; 
+    const home = "https://podcastapp-10952.bubbleapps.io/"; 
     const uploadEndpoint = `${home}fileupload`; 
 
     const page = await browser.newPage();
