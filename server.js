@@ -131,7 +131,7 @@ console.log(audioSource)
         .setDuration(duration)
         .output('output1.mp3')
         .on('end', () => {
-          const audioSource = fs.readFileSync('output.mp3', { encoding: 'base64' });
+          const audioSource = fs.readFileSync('output1.mp3', { encoding: 'base64' });
           const payload = {
             name: "output.mp3",
             contents: audioSource,
@@ -144,27 +144,32 @@ console.log(audioSource)
             console.log("Response:", response.data);
             const fileURL = response.data;
             const httpsFileURL = `https:${fileURL}`;
+            res.json({ httpsFileURL, desc });
           })
           .catch(error => {
         
             console.error("Error:", error);
           });
+          
           //console.log(audioSource);
           fs.unlinkSync(outputFileName); // Cleanup temporary file
         })
         .run();
     };
 
-    
  downloadAudioFile(audioSource, outputFileName, getAudioDuration);
 
+console.log('finished')
 
 
-    res.json({ httpsFileURL, desc });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('An error occurred while processing the request');
-  }
+
+
+
+
+} catch (error) {
+  console.error(error);
+  res.status(500).send('An error occurred while processing the request');
+}
 });
 
 app.listen(port, () => {
