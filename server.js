@@ -18,6 +18,7 @@ console.log(ffmprobe_static.path);
 console.log(ffmpeg_static);
 var readline = require('readline');
 const url = require('url');
+const { start } = require('repl');
 
 
 
@@ -68,15 +69,23 @@ app.get('/download', async (req, res) => {
 console.log(audioSource1)
 console.log(desc)
 
+let audioSource;
+
+if (!audioSource1.includes("redcircle")) {
 await page.goto(audioSource1);
 await page.waitForSelector('body > video > source'); 
-const audioSource = await page.$eval('body > video > source', (audio) => audio.src);
+audioSource = await page.$eval('body > video > source', (audio) => audio.src);
 console.log(audioSource)
 
-    
+}else{
+console.log("redcircle")
+audioSource = audioSource1;
+  console.log(audioSource)
+
+
+}
     // Close the browser
     await browser.close();
-    const parsedUrl = new URL(audioSource);
     let r = (Math.random() + 1).toString(36).substring(7);
     const outputFileName = `${r}.mp3`;
 
@@ -120,14 +129,36 @@ console.log(audioSource)
           return;
         }
         const durationInSeconds = metadata.format.duration;
-        const startTime = (durationInSeconds / 2) - 300; // Half duration minus 5 minutes (300 seconds)
-        extractAndConvertToBase64(startTime);
+        let startTime;
+        if (durationInSeconds < 600){
+
+          startTime = 0;
+
+        } // Half duration minus 5 minutes (300 seconds)
+        else {
+          startTime = (durationInSeconds / 2) - 300;
+
+
+
+        }
+        extractAndConvertToBase64(startTime, durationInSeconds);
       });
     };
 
-    const extractAndConvertToBase64 = (startTime) => {
-      const duration = '00:10:00';  // Duration (10 minutes)
+    const extractAndConvertToBase64 = (startTime, durationInSeconds) => {
+      let duration;
+      if (durationInSeconds < 600){
+    //duration should be the entire length of the podcast
+    const hours = Math.floor(durationInSeconds / 3600);
+    const minutes = Math.floor((durationInSeconds % 3600) / 60);
+    const seconds = durationInSeconds % 60;
+    duration = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      } 
+      else {
 
+        duration = '00:10:00';  // Duration (10 minutes)
+
+      }
       ffmpeg()
         .input(outputFileName)
         .setStartTime(startTime)
