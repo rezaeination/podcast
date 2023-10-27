@@ -73,33 +73,36 @@ console.log(desc)
 let audioSource;
 
 if (!audioSource1.includes("redcircle")) {
-await page.goto(audioSource1);
-await page.waitForSelector('body > video > source'); 
-audioSource = await page.$eval('body > video > source', (audio) => audio.src);
-console.log(audioSource)
-
-}else{
-console.log("redcircle")
-audioSource = audioSource1;
+  await page.goto(audioSource1);
+  await page.waitForSelector('body > video > source'); 
+  audioSource = await page.$eval('body > video > source', (audio) => audio.src);
+  console.log(audioSource)
+} else {
+  console.log("redcircle")
+  audioSource = audioSource1;
   console.log(audioSource)
 
-  https.get(audioSource1, (response) => {
-    let data = '';
-    response.on('data', (chunk) => {
-      data += chunk;
+  const audioUrlPromise = new Promise((resolve, reject) => {
+    https.get(audioSource1, (response) => {
+      let data = '';
+      response.on('data', (chunk) => {
+        data += chunk;
+      });
+      response.on('end', () => {
+        const dom = new JSDOM(data);
+        const audioUrl = dom.window.document.querySelector('a').href;
+        console.log(audioUrl);
+        resolve(audioUrl);
+      });
+    }).on('error', (err) => {
+      console.error(`Error: ${err.message}`);
+      reject(err);
     });
-    response.on('end', () => {
-      const dom = new JSDOM(data);
-      const audioUrl = dom.window.document.querySelector('a').href;
-      console.log(audioUrl);
-      audioSource = audioUrl;
-    });
-  }).on('error', (err) => {
-    console.error(`Error: ${err.message}`);
   });
 
-
+  audioSource = await audioUrlPromise;
 }
+
     // Close the browser
     await browser.close();
     let r = (Math.random() + 1).toString(36).substring(7);
