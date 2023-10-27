@@ -19,6 +19,7 @@ console.log(ffmpeg_static);
 var readline = require('readline');
 const url = require('url');
 const { start } = require('repl');
+const { JSDOM } = require('jsdom');
 
 
 
@@ -82,12 +83,28 @@ console.log("redcircle")
 audioSource = audioSource1;
   console.log(audioSource)
 
+  https.get(audioSource1, (response) => {
+    let data = '';
+    response.on('data', (chunk) => {
+      data += chunk;
+    });
+    response.on('end', () => {
+      const dom = new JSDOM(data);
+      const audioUrl = dom.window.document.querySelector('a').href;
+      console.log(audioUrl);
+      audioSource = audioUrl;
+    });
+  }).on('error', (err) => {
+    console.error(`Error: ${err.message}`);
+  });
+
 
 }
     // Close the browser
     await browser.close();
     let r = (Math.random() + 1).toString(36).substring(7);
     const outputFileName = `${r}.mp3`;
+    console.log(`final src = ${audioSource}`)
 
     const downloadAudioFile = (url, dest, callback) => {
       console.log("Started download");
@@ -96,6 +113,7 @@ audioSource = audioSource1;
       let totalBytes = 0;
     
       https.get(url, (response) => {
+        console.log(url)
         totalBytes = response.headers['content-length'];
     
         response.on('data', (chunk) => {
