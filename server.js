@@ -71,19 +71,28 @@ console.log(audioSource1)
 console.log(desc)
 
 let audioSource;
+let audioSource2;
+let audiomain;
+let blacklist = ['redcircle', 'prxu.org']
+if (audioSource1.includes("dovetail.prxu.org")) {
+  audioSource2 = 'https://' + audioSource1.substring(audioSource1.indexOf("dovetail.prxu.org"));
+  audiomain = audioSource2;
+} else {
+  audiomain = audioSource1;
 
-if (!audioSource1.includes("redcircle")) {
-  await page.goto(audioSource1);
+}
+if (!blacklist.some(item => audioSource1.includes(item))) {
+  await page.goto(audiomain);
   await page.waitForSelector('body > video > source'); 
   audioSource = await page.$eval('body > video > source', (audio) => audio.src);
   console.log(audioSource)
 } else {
   console.log("redcircle")
-  audioSource = audioSource1;
-  console.log(audioSource)
+  audioSource = audiomain;
+  console.log(audiomain)
 
   const audioUrlPromise = new Promise((resolve, reject) => {
-    https.get(audioSource1, (response) => {
+    https.get(audiomain, (response) => {
       let data = '';
       response.on('data', (chunk) => {
         data += chunk;
