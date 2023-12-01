@@ -4,7 +4,7 @@ const cors = require('cors');
 require('dotenv').config();
 const fs = require('fs');
 const { spawn } = require('child_process');
-const https = require('https');
+const https = require('follow-redirects').https;
 const axios = require("axios");
 const path = require('path');
 const ffmpeg_static = require('ffmpeg-static');
@@ -73,44 +73,65 @@ console.log(desc)
 let audioSource;
 let audioSource2;
 let audiomain;
-let blacklist = ['redcircle', 'prxu.org']
-if (audioSource1.includes("dovetail.prxu.org")) {
+let blacklist = []
+if (audioSource1.includes("chtbl") || audioSource1.includes("chrtwdw")) {
   audioSource2 = 'https://' + audioSource1.substring(audioSource1.indexOf("dovetail.prxu.org"));
   audiomain = audioSource2;
+  console.log('this route')
 } else {
   audiomain = audioSource1;
 
 }
+
 if (!blacklist.some(item => audioSource1.includes(item))) {
+  try {
   await page.goto(audiomain);
   await page.waitForSelector('body > video > source'); 
-  audioSource = await page.$eval('body > video > source', (audio) => audio.src);
-  console.log(audioSource)
-} else {
-  console.log("redcircle")
-  audioSource = audiomain;
-  console.log(audiomain)
 
-  const audioUrlPromise = new Promise((resolve, reject) => {
-    https.get(audiomain, (response) => {
-      let data = '';
-      response.on('data', (chunk) => {
-        data += chunk;
-      });
-      response.on('end', () => {
-        const dom = new JSDOM(data);
-        const audioUrl = dom.window.document.querySelector('a').href;
-        console.log(audioUrl);
-        resolve(audioUrl);
-      });
-    }).on('error', (err) => {
-      console.error(`Error: ${err.message}`);
-      reject(err);
-    });
-  });
+ 
+    audioSource = await page.$eval('body > video > source', (audio) => audio.src);
+    // Rest of your code that uses audioSource
+  } catch (error) {
+    console.log('the other route')
 
-  audioSource = await audioUrlPromise;
-}
+   
+      console.log("redcircle")
+      console.log(audiomain)
+    
+      const getAudioUrl = (audiomain) => {
+        return new Promise((resolve, reject) => {
+          https.get(audiomain, (response) => {
+            let data = '';
+            response.on('data', (chunk) => {
+              data += chunk;
+            });
+            response.on('end', () => {
+              const dom = new JSDOM(data);
+              const audioUrl = dom.window.document.querySelector('a').href;
+              console.log(audioUrl);
+              resolve(audioUrl);
+            });
+          }).on('error', (err) => {
+            console.error(`Error: ${err.message}`);
+            reject(err);
+          });
+        });
+      };
+      console.log("ahref")
+
+      //let audioSourcez = await getAudioUrl(audiomain);
+
+        console.log("ahref")
+      //audioSourcez = await getAudioUrl(audioSourcez);
+      //const indexOfMp3 = audioSourcez.indexOf(".mp3");
+
+      // Remove everything after ".mp3"
+      //audioSourcez = audioSourcez.substring(0, indexOfMp3 + 4); 
+      audioSource = audiomain;
+  }        
+  console.log(`wefwef${audioSource}`)
+
+} 
 
     // Close the browser
     await browser.close();
