@@ -20,7 +20,7 @@ var readline = require('readline');
 const url = require('url');
 const { start } = require('repl');
 const { JSDOM } = require('jsdom');
-
+///
 
 
 
@@ -74,14 +74,8 @@ let audioSource;
 let audioSource2;
 let audiomain;
 let blacklist = []
-if (audioSource1.includes("chtbl") || audioSource1.includes("chrtwdw")) {
-  audioSource2 = 'https://' + audioSource1.substring(audioSource1.indexOf("dovetail.prxu.org"));
-  audiomain = audioSource2;
-  console.log('this route')
-} else {
-  audiomain = audioSource1;
 
-}
+  audiomain = audioSource1;
 
 if (!blacklist.some(item => audioSource1.includes(item))) {
   try {
