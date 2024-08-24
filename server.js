@@ -58,15 +58,15 @@ app.get('/download', async (req, res) => {
     await page.goto(url);
   
     // Wait for the button to become visible and click it
-    await page.waitForSelector('body > div.ember-view > main > div.animation-wrapper.is-visible > div > div > section > div.l-row > div.l-column.medium-5.large-4.small-valign-top.small-hide.medium-show-inlineblock > div > div > button'); // Replace 'button-selector' with the actual selector of the button
-    await page.click('body > div.ember-view > main > div.animation-wrapper.is-visible > div > div > section > div.l-row > div.l-column.medium-5.large-4.small-valign-top.small-hide.medium-show-inlineblock > div > div > button');
+    await page.waitForSelector('#scrollable-page > main > div > div.section.section--episodeHeaderRegular.svelte-1f64bnu.without-bottom-spacing > div > div > div.primary-actions.svelte-1fpig7d > div > div > div > button'); // Replace 'button-selector' with the actual selector of the button
+    await page.click('#scrollable-page > main > div > div.section.section--episodeHeaderRegular.svelte-1f64bnu.without-bottom-spacing > div > div > div.primary-actions.svelte-1fpig7d > div > div > div > button');
   
     // Wait for the audio tag to become available
     await page.waitForSelector('#apple-music-player'); // Replace 'audio-selector' with the actual selector of the audio tag
   
     // Get the source of the audio tag
     const audioSource1 = await page.$eval('#apple-music-player', (audio) => audio.src);
-    const desc = await page.$eval('body > div.ember-view > main > div.animation-wrapper.is-visible > div > div > section > div.l-row > div.l-column.small-12.medium-7.large-8.small-valign-top > div > div.l-column.small-7.medium-12.small-valign-top > header > div > div.product-hero-desc.product-hero-desc--spacer-bottom-large', (element) => element.textContent);
+    const desc = await page.$eval('#scrollable-page > main > div > div.section.section--paragraph.svelte-1f64bnu.section--display-separator > div > div', (element) => element.textContent);
 console.log(audioSource1)
 console.log(desc)
 
